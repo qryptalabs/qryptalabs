@@ -1,15 +1,25 @@
-# Remix compiler artifacts
-**/artifacts/
-**/artifacts/**
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
 
-# Remix plugin state folders
-deps/
-states/
-
-# Debug info
-*.dbg.json
-*.tsbuildinfo
-
-# Optional
+# Secrets / local env (NEVER COMMIT)
 .env
-.env.local
+.env.*
+*.key
+*.pem
+*.seed
+secrets.json
+wallet.json
+keystore/
+*.keystore
+
+# Remix local artifacts (optional)
+artifacts/
+cache/
+build/
+dist/
+
+# Logs
+*.log
