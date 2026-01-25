@@ -1,0 +1,18 @@
+# Contributing
+
+Thanks for your interest in contributing to QRYPTA.
+
+## Guidelines
+- Open an Issue before submitting large changes
+- Keep PRs focused and well-described
+- Add tests for any new behavior
+- Avoid including secrets or private keys in commits
+
+## Pull Requests
+Include:
+- What changed and why
+- How to test
+- Any security considerations
+
+## Code of Conduct
+Be respectful and constructive in discussions.
