@@ -1,90 +1,24 @@
-# QRYPTA Contracts (QRYP)
+🛡️ QRYPTA: Post-Quantum ZK-Token InfrastructureThe first hybrid ERC-20 token on BNB Chain designed to survive the Quantum Future.QRYPTA combines standard market compatibility (DEX/CEX ready) with a Post-Quantum Cryptography (PQC) verification lane, powered by SP1 Zero-Knowledge Proofs and ISO 20022 compliance standards.🚨 The ProblemQuantum computers will break current blockchain signatures (ECDSA) within the next decade. Assets stored on standard blockchains today are at risk of future theft.⚡ The Solution: QRYPTAWe verify Dilithium/Falcon (NIST-standard PQC signatures) off-chain using the SP1 zkVM and submit a ZK-Proof to the blockchain. This allows BNB Chain to verify quantum-safe transactions today without waiting for a hard fork.🌍 Mainnet DeploymentsNetworkContract AddressStatusExplorerBNB Smart Chain0x5266fe1aD9B035d0ED6142f1A70e9D6F102c8153🟢 LiveView on BscScanEthereumComing Soon🟡 Planned-🏗️ Architecture & FeaturesQRYPTA operates as a Dual-Mode Token:1. Market Lane (Standard)Fully compatible with Uniswap, PancakeSwap, and CEXs.Standard approve, transfer, transferFrom.Burn Rate: Configurable basis points (bps) for deflationary mechanics.2. Quantum-Secure Lane (High Security) 🛡️ZK-Powered Verification: Transfers are signed with PQC keys (Dilithium), proven in Rust via SP1, and verified on-chain via quantumTransferZK.SP1 Integration: Utilizing Succinct's zkVM to verify off-chain computation.ISO 20022 Ready: Embedded isoRefHash for institutional banking reconciliation and compliance.3. Resilience & ComplianceM-of-N Attestations: Optional multisig-style approvals for high-value transfers.Compliance Hooks: freeze, unfreeze, and KYC Allowlist capabilities for regulated environments.🧩 Technical Deep Dive: The ZK ProofThe quantumTransferZK function enforces strict binding of Public Values to prevent replay attacks:Soliditystruct PublicValues {
+    address from;
+    address to;
+    uint256 amount;
+    uint256 nonce;
+    bytes32 pqcRoot;    // Post-Quantum Identity Root
+    bytes32 isoRefHash; // ISO 20022 Reference
+    uint256 chainId;
+    address token;      // Contract Address
+    uint256 deadline;
+}
+If the ZK Proof does not mathematically match these values, the EVM reverts the transaction.🚀 Getting Started (Developers)PrerequisitesRustSP1 SDKFoundryInstallationBash# Clone the repository
+git clone https://github.com/qryptalabs/core.git
 
-Hybrid ERC-20 smart contracts for **BNB Chain** and **Ethereum**, combining standard market compatibility (DEX/CEX friendly) with an optional **post-quantum transfer verification lane** powered by **SP1 ZK proofs**, plus a resilience path via **M-of-N attester approvals**. Includes **ISO 20022-style payment references** and **compliance-ready controls**.
+# Install dependencies
+npm install
+cargo build --release
 
----
-
-## Mainnet Deployments
-
-- **BSC Mainnet (verified):** `0x5266fe1aD9B035d0ED6142f1A70e9D6F102c8153`
-
-> Ethereum deployment: planned.
-
----
-
-## Key Features
-
-### Market Compatibility
-- Standard **ERC-20 transfers** for DEX/CEX workflows
-- Allowances (`approve/transferFrom`) supported
-
-### Post-Quantum Transfer Verification (ZK / SP1)
-- User registers a **PQC commitment/root** (`pqcRoot`)
-- Transfers can be executed via **`quantumTransferZK`**
-- On-chain verification uses:
-  - `programVKey` (SP1 program verification key)
-  - `sp1Gateway` verifier
-  - `publicValues` binding: `from/to/amount/nonce/chainId/token/deadline/isoRefHash`
-
-### Resilience Path (Attesters)
-- Optional **M-of-N** attester approvals (`attestedQuantumTransfer`)
-- Signatures are validated with strict ordering to prevent duplicates
-
-### ISO 20022-Style Payment References
-- Transfers can emit auditable ISO references (string) and `isoRefHash`
-- Useful for reconciliation and settlement workflows
-
-### Compliance & Safety Controls
-- `pause/unpause` (hard stop)
-- `freeze/unfreeze` per wallet
-- KYC allowlist + denylist toggles
-- `pqcOnly` enforcement per wallet
-- Threshold-based enforcement for large transfers
-- Configurable burn rate (bps)
-
----
-
-## Architecture Overview
-
-QRYPTA is designed as a **dual-mode token**:
-
-1) **Normal lane** for standard market operations (DEX/CEX)
-2) **High-security lane** where a transfer is proven off-chain (PQC verification inside the SP1 program) and verified on-chain using SP1 proof verification.
-
-**Why this approach?**  
-Native PQC signature verification (Dilithium/Falcon) is not practical inside the EVM. Instead, the contract verifies a ZK proof that attests PQC verification was performed correctly and that the transfer parameters match the on-chain requirements.
-
----
-
-## SP1 / ZK Proof Interface (PublicValues)
-
-The contract expects `publicValues` to bind all critical fields to prevent replay and cross-domain misuse:
-
-- `from`
-- `to`
-- `amount`
-- `nonce`
-- `pqcRoot`
-- `isoRefHash`
-- `chainId`
-- `token` (contract address)
-- `deadline`
-
-Any mismatch should cause the transfer to revert.
-
----
-
-## Security Notes
-
-This repo contains contracts with **admin and compliance controls**. The owner can adjust critical parameters (e.g., gateway/vKey, quorum, pause/freeze, burn bps). For production governance, consider:
-- **Multisig ownership**
-- **Timelock** for sensitive changes
-- Clear public policy for upgrades/config changes
-
-See: `SECURITY.md`
-
----
-
-## Repository Structure (suggested)
+# Generate a Genesis Proof (Local)
+cd local-prover
+npm start
+🗺️ Roadmap[x] Phase 1: Smart Contract Deployment on BSC Mainnet.[x] Phase 2: Local SP1 Prover Integration.[ ] Phase 3: Succinct Prover Network Integration (In Progress).[ ] Phase 4: Quantum-Secure Bridge to Ethereum.[ ] Phase 5: Institutional Pilot with ISO 20022 Banking Partners.🔒 SecurityContracts include administrative controls (Gateway updates, Pausable, Freezable).Audits: Pending.Governance: Currently managed by the deployer key. Transition to DAO Multisig planned for Q3 2026.See SECURITY.md for bug bounty information.
 
 
